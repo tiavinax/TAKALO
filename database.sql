@@ -1,6 +1,8 @@
 -- Création de la base de données
 -- CREATE DATABASE IF NOT EXISTS takalo_takalo;
 -- USE takalo_takalo;
+-- CREATE DATABASE IF NOT EXISTS takalo_takalo;
+-- USE takalo_takalo;
 
 -- Table des utilisateurs
 CREATE TABLE utilisateurs (
@@ -74,7 +76,6 @@ INSERT INTO photos_objet (objet_id, chemin, est_principale) VALUES
 (6, 'guitare_yamaha.jpg', 1);
 
             -- CHANGEMENT TIAVINA (9 FEV 2026 - 16:46)
-            
     -- Table des catégories (pour le backoffice)
 CREATE TABLE categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
