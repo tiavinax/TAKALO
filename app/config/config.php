@@ -48,11 +48,11 @@ $app->path(dirname(__DIR__, 2)); // CORRECTION ICI
 $isLocal = in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1']);
 
 if ($isLocal) {
-    // Local : /Examen/public
+    // Local : /TAKALO/public
     $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 } else {
     // Serveur : /ETU003955
-    $baseUrl = '/ETU003955/Examen/public';
+    $baseUrl = '/ETU003955/TAKALO/public';
 }
 
 $app->set('flight.base_url', $baseUrl);  // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
@@ -111,5 +111,5 @@ if ($base !== '/') {
 }
 
 // Optionnel : définir d'autres constantes utiles
-define('SITE_NAME', 'LivraisonPro');
+define('SITE_NAME', '');
 define('APP_ROOT', dirname(dirname(__DIR__)));
