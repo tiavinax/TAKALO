@@ -1,5 +1,4 @@
 <?php
-
 /**********************************************
  *      FlightPHP Skeleton Sample Config      *
  **********************************************
@@ -24,12 +23,12 @@ error_reporting(E_ALL);
 
 // Character encoding
 if (function_exists('mb_internal_encoding') === true) {
-	mb_internal_encoding('UTF-8');
+    mb_internal_encoding('UTF-8');
 }
 
 // Default Locale Change as needed or feel free to remove.
 if (function_exists('setlocale') === true) {
-	setlocale(LC_ALL, 'en_US.UTF-8');
+    setlocale(LC_ALL, 'en_US.UTF-8');
 }
 
 /**********************************************
@@ -38,19 +37,29 @@ if (function_exists('setlocale') === true) {
 
 // Get the $app var to use below
 if (empty($app) === true) {
-	$app = Flight::app();
+    $app = Flight::app();
 }
 
 // This autoloads your code in the app directory so you don't have to require_once everything
 // You'll need to namespace your classes with "app\folder\" to include them properly
-$app->path(__DIR__ . $ds . '..' . $ds . '..');
+$app->path(dirname(__DIR__, 2)); // CORRECTION ICI
 
 // Core config variables
-$app->set('flight.base_url', '/',);           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
+$isLocal = in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1']);
+
+if ($isLocal) {
+    // Local : /Examen/public
+    $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+} else {
+    // Serveur : /ETU003955
+    $baseUrl = '/ETU003955/Examen/public';
+}
+
+$app->set('flight.base_url', $baseUrl);  // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
 $app->set('flight.case_sensitive', false);    // Set true for case sensitive routes. Default: false
 $app->set('flight.log_errors', true);         // Log errors to file. Recommended: true in production
 $app->set('flight.handle_errors', false);     // Let Tracy handle errors if false. Set true to use Flight's error handler
-$app->set('flight.views.path', __DIR__ . $ds . '..' . $ds . 'views'); // Path to views/templates
+$app->set('flight.views.path', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views'); // Path to views/templates
 $app->set('flight.views.extension', '.php');  // View file extension (e.g., '.php', '.latte')
 $app->set('flight.content_length', false);    // Send content length header. Usually false unless required by proxy
 
@@ -61,27 +70,46 @@ $app->set('csp_nonce', $nonce);
 /**********************************************
  *           User Configuration               *
  **********************************************/
+
+if ($isLocal) {
+    $database = [
+        'driver'   => 'mysql',
+        'host'     => 'localhost:3306',
+        'dbname'   => 'takalo_takalo',
+        'user'     => 'root',
+        'password' => '',
+        'charset'  => 'utf8mb4'
+    ];
+} else {
+    $database = [
+        'driver'   => 'mysql',
+        'host'     => 'localhost:3306',
+        'dbname'   => 'db_s2_ETU003955',
+        'user'     => 'ETU003955',
+        'password' => 'ZkRvFN0a',
+        'charset'  => 'utf8mb4'
+    ];
+}
+
 return [
-	/**************************************
-	 *         Database Settings          *
-	 **************************************/
-	'database' => [
-		// MySQL Example:
-		// 'host'     => 'localhost',      // Database host (e.g., 'localhost', 'db.example.com')
-		// 'dbname'   => 'your_db_name',   // Database name (e.g., 'flightphp')
-		// 'user'     => 'your_username',  // Database user (e.g., 'root')
-		// 'password' => 'your_password',  // Database password (never commit real passwords)
-
-		// SQLite Example:
-		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite', // Path to SQLite file
-	],
-
-	// Google OAuth Credentials
-	// 'google_oauth' => [
-	//     'client_id'     => 'your_client_id',     // Google API client ID
-	//     'client_secret' => 'your_client_secret', // Google API client secret
-	//     'redirect_uri'  => 'your_redirect_uri',  // Redirect URI for OAuth callback
-	// ],
-
-	// Add more configuration sections below as needed
+    'database' =>  $database
 ];
+
+// app/config/constants.php
+
+// Déterminer BASE_URL automatiquement
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+$script = $_SERVER['SCRIPT_NAME'];
+$base = dirname($script);
+
+// Si nous sommes dans un sous-dossier (ex: /projet)
+if ($base !== '/') {
+    define('BASE_URL', $protocol . '://' . $host . $base);
+} else {
+    define('BASE_URL', $protocol . '://' . $host);
+}
+
+// Optionnel : définir d'autres constantes utiles
+define('SITE_NAME', 'LivraisonPro');
+define('APP_ROOT', dirname(dirname(__DIR__)));

@@ -1,0 +1,8 @@
+                TAKALO
+
+    Fonctionnalités (partie 1 sur 2)
+
+1. Backoffice (page admin)
+
+a. Login admin (mettre le login par défaut sur le formulaire)
+b. Gestion des catégories
