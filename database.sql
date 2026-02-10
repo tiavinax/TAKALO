@@ -51,9 +51,9 @@ CREATE TABLE echanges (
 
 -- Insérer des utilisateurs de test
 INSERT INTO utilisateurs (nom, email, password) VALUES 
-('Jean Dupont', 'jean@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'), -- password
-('Marie Martin', 'marie@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Pierre Durand', 'pierre@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('Jean Dupont', 'jean@example.com', '1234'),\
+('Marie Martin', 'marie@example.com', '5678'),
+('Pierre Durand', 'pierre@example.com', '91011');
 
 -- Insérer des objets
 INSERT INTO objets (utilisateur_id, titre, description, prix_estimatif) VALUES
