@@ -1,8 +1,6 @@
 -- Création de la base de données
--- CREATE DATABASE IF NOT EXISTS takalo_takalo;
--- USE takalo_takalo;
--- CREATE DATABASE IF NOT EXISTS takalo_takalo;
--- USE takalo_takalo;
+CREATE DATABASE IF NOT EXISTS takalo_takalo;
+USE takalo_takalo;
 
 -- Table des utilisateurs
 CREATE TABLE utilisateurs (
