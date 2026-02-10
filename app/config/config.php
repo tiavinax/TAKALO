@@ -1,87 +1,83 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-/**********************************************
- *      FlightPHP Skeleton Sample Config      *
- **********************************************
- *
- * Copy this file to config.php and update values as needed.
- * All settings are required unless marked as optional.
- *
- * Example:
- *   cp app/config/config_sample.php app/config/config.php
- *
- * This file is NOT tracked by git. Store sensitive credentials here.
- **********************************************/
+// Configuration MAMP - MOT DE PASSE VIDE
+$socket = '/Applications/MAMP/tmp/mysql/mysql.sock';
+$dbname = 'takalo_takalo';
+$user = 'root';
+$password = ''; // MOT DE PASSE VIDE
 
-/**********************************************
- *         Application Environment            *
- **********************************************/
-// Set your timezone (e.g., 'America/New_York', 'UTC')
-date_default_timezone_set('UTC');
-
-// Error reporting level (E_ALL recommended for development)
-error_reporting(E_ALL);
-
-// Character encoding
-if (function_exists('mb_internal_encoding') === true) {
-	mb_internal_encoding('UTF-8');
+// Session DOIT ÊTRE DÉMARRÉE AVANT TOUT
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Default Locale Change as needed or feel free to remove.
-if (function_exists('setlocale') === true) {
-	setlocale(LC_ALL, 'en_US.UTF-8');
+// Mode debug - mettre à false pour cacher les messages
+define('DEBUG', false); // ← CHANGER À false POUR CACHER LE DEBUG
+define('BASE_URL', 'http://localhost:8000');
+
+// Configuration de la base de données
+try {
+    $dsn = "mysql:unix_socket=$socket;dbname=$dbname;charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
+    
+    // Enregistrer la connexion
+    Flight::register('db', 'PDO', 
+        array($dsn, $user, $password),
+        function($db) {
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        }
+    );
+    
+} catch (PDOException $e) {
+    // Afficher une erreur propre même sans debug
+    die("<h2>Erreur de connexion à la base de données</h2>
+         <p>Veuillez vérifier que MAMP est démarré et que MySQL fonctionne.</p>
+         <p><em>Détails techniques (admin) : " . htmlspecialchars($e->getMessage()) . "</em></p>");
 }
 
-/**********************************************
- *           FlightPHP Core Settings          *
- **********************************************/
+// Configuration des vues
+$viewsPath = __DIR__ . '/../views';
+Flight::set('flight.views.path', $viewsPath);
 
-// Get the $app var to use below
-if (empty($app) === true) {
-	$app = Flight::app();
+// Middleware pour vérifier l'authentification
+Flight::map('requireAuth', function() {
+    if (!isset($_SESSION['user_id'])) {
+        Flight::redirect('/login');
+        return false;
+    }
+    return true;
+});
+
+// Configuration d'erreur
+if (DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    
+    // Gérer les erreurs silencieusement
+    Flight::map('error', function($ex) {
+        // Logger l'erreur (vous pourriez écrire dans un fichier log)
+        error_log('FlightPHP Error: ' . $ex->getMessage());
+        
+        // Afficher une page d'erreur propre
+        Flight::render('layout', [
+            'title' => 'Erreur',
+            'content' => '
+                <div class="container text-center py-5">
+                    <h1 class="text-danger">Oops !</h1>
+                    <p class="lead">Une erreur est survenue.</p>
+                    <a href="' . BASE_URL . '" class="btn btn-primary">Retour à l\'accueil</a>
+                </div>
+            '
+        ]);
+    });
 }
-
-// This autoloads your code in the app directory so you don't have to require_once everything
-// You'll need to namespace your classes with "app\folder\" to include them properly
-$app->path(__DIR__ . $ds . '..' . $ds . '..');
-
-// Core config variables
-$app->set('flight.base_url', '/',);           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
-$app->set('flight.case_sensitive', false);    // Set true for case sensitive routes. Default: false
-$app->set('flight.log_errors', true);         // Log errors to file. Recommended: true in production
-$app->set('flight.handle_errors', false);     // Let Tracy handle errors if false. Set true to use Flight's error handler
-$app->set('flight.views.path', __DIR__ . $ds . '..' . $ds . 'views'); // Path to views/templates
-$app->set('flight.views.extension', '.php');  // View file extension (e.g., '.php', '.latte')
-$app->set('flight.content_length', false);    // Send content length header. Usually false unless required by proxy
-
-// Generate a CSP nonce for each request and store in $app
-$nonce = bin2hex(random_bytes(16));
-$app->set('csp_nonce', $nonce);
-
-/**********************************************
- *           User Configuration               *
- **********************************************/
-return [
-	/**************************************
-	 *         Database Settings          *
-	 **************************************/
-	'database' => [
-		// MySQL Example:
-		// 'host'     => 'localhost',      // Database host (e.g., 'localhost', 'db.example.com')
-		// 'dbname'   => 'your_db_name',   // Database name (e.g., 'flightphp')
-		// 'user'     => 'your_username',  // Database user (e.g., 'root')
-		// 'password' => 'your_password',  // Database password (never commit real passwords)
-
-		// SQLite Example:
-		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite', // Path to SQLite file
-	],
-
-	// Google OAuth Credentials
-	// 'google_oauth' => [
-	//     'client_id'     => 'your_client_id',     // Google API client ID
-	//     'client_secret' => 'your_client_secret', // Google API client secret
-	//     'redirect_uri'  => 'your_redirect_uri',  // Redirect URI for OAuth callback
-	// ],
-
-	// Add more configuration sections below as needed
-];
