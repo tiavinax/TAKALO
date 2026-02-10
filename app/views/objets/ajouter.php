@@ -12,7 +12,7 @@ ob_start();
                         <li class="breadcrumb-item active">Ajouter un objet</li>
                     </ol>
                 </nav>
-                
+
                 <div class="d-flex align-items-center mb-4">
                     <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
                         <i class="bi bi-plus-circle display-6"></i>
@@ -22,7 +22,7 @@ ob_start();
                         <p class="text-muted mb-0">Remplissez les informations de votre objet pour commencer à échanger</p>
                     </div>
                 </div>
-                
+
                 <!-- Barre de progression -->
                 <div class="progress-steps mb-5">
                     <div class="d-flex justify-content-between position-relative">
@@ -50,7 +50,7 @@ ob_start();
                     </div>
                 </div>
             </div>
-            
+
             <!-- Formulaire -->
             <div class="card border-0 shadow-lg">
                 <div class="card-header bg-gradient-info text-white py-4">
@@ -59,7 +59,7 @@ ob_start();
                         Détails de l'objet
                     </h3>
                 </div>
-                
+
                 <div class="card-body p-4 p-md-5">
                     <form id="ajouterObjetForm" enctype="multipart/form-data">
                         <div class="row g-4">
@@ -73,16 +73,16 @@ ob_start();
                                     <span class="input-group-text bg-light border-end-0">
                                         <i class="bi bi-tag text-muted"></i>
                                     </span>
-                                    <input type="text" class="form-control form-control-lg border-start-0" 
-                                           id="titre" name="titre" 
-                                           placeholder="Ex: Livre 'Le Petit Prince', Veste en cuir..."
-                                           required>
+                                    <input type="text" class="form-control form-control-lg border-start-0"
+                                        id="titre" name="titre"
+                                        placeholder="Ex: Livre 'Le Petit Prince', Veste en cuir..."
+                                        required>
                                 </div>
                                 <div class="form-text">
                                     Donnez un titre clair et attractif à votre objet
                                 </div>
                             </div>
-                            
+
                             <!-- Description -->
                             <div class="col-12">
                                 <label for="description" class="form-label fw-semibold">
@@ -93,10 +93,10 @@ ob_start();
                                     <span class="input-group-text bg-light border-end-0 align-items-start pt-3">
                                         <i class="bi bi-text-paragraph text-muted"></i>
                                     </span>
-                                    <textarea class="form-control border-start-0" 
-                                              id="description" name="description" 
-                                              rows="5"
-                                              placeholder="Décrivez votre objet en détail : état, marque, dimensions, défauts éventuels..."></textarea>
+                                    <textarea class="form-control border-start-0"
+                                        id="description" name="description"
+                                        rows="5"
+                                        placeholder="Décrivez votre objet en détail : état, marque, dimensions, défauts éventuels..."></textarea>
                                 </div>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div class="form-text">
@@ -105,7 +105,7 @@ ob_start();
                                     <span id="charCount" class="text-muted small">0/500</span>
                                 </div>
                             </div>
-                            
+
                             <!-- Prix estimatif -->
                             <div class="col-md-6">
                                 <label for="prix_estimatif" class="form-label fw-semibold">
@@ -116,17 +116,17 @@ ob_start();
                                     <span class="input-group-text bg-light border-end-0">
                                         <i class="bi bi-cash-coin text-muted"></i>
                                     </span>
-                                    <input type="number" class="form-control border-start-0" 
-                                           id="prix_estimatif" name="prix_estimatif" 
-                                           step="0.01" min="0"
-                                           placeholder="0.00">
+                                    <input type="number" class="form-control border-start-0"
+                                        id="prix_estimatif" name="prix_estimatif"
+                                        step="0.01" min="0"
+                                        placeholder="0.00">
                                     <span class="input-group-text">€</span>
                                 </div>
                                 <div class="form-text">
                                     Estimation de la valeur de votre objet
                                 </div>
                             </div>
-                            
+
                             <!-- Catégorie (optionnel pour plus tard) -->
                             <div class="col-md-6">
                                 <label for="categorie" class="form-label fw-semibold">
@@ -143,44 +143,44 @@ ob_start();
                                     <option value="autre">Autre</option>
                                 </select>
                             </div>
-                            
+
                             <!-- Photos -->
                             <div class="col-12">
                                 <label class="form-label fw-semibold">
                                     <i class="bi bi-camera text-primary me-2"></i>
                                     Photos de l'objet
                                 </label>
-                                
+
                                 <!-- Zone de dépôt -->
                                 <div class="drop-zone border-2 border-dashed rounded-3 p-5 text-center mb-4"
-                                     id="dropZone">
-                                    <i class="bi bi-cloud-arrow-up display-4 text-muted mb-3"></i>
-                                    <h5 class="mb-2">Glissez-déposez vos photos ici</h5>
-                                    <p class="text-muted mb-4">ou cliquez pour parcourir vos fichiers</p>
-                                    <input type="file" class="d-none" id="photos" name="photos[]" 
-                                           multiple accept="image/*">
-                                    <button type="button" class="btn btn-outline-primary" id="browseBtn">
+                                    id="dropZone">
+                                                                       <input type="file" class="form-control visually-hidden"
+                                        id="photos" name="photos[]"
+                                        multiple accept="image/*"
+                                        style="opacity: 0; position: absolute; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;">
+                                    <button type="button" class="btn btn-outline-primary position-relative"
+                                        style="z-index: 2;">
                                         <i class="bi bi-folder2-open me-2"></i>Choisir des photos
                                     </button>
                                     <p class="small text-muted mt-3 mb-0">
                                         Formats acceptés : JPG, PNG, GIF (max 5MB par photo)
                                     </p>
                                 </div>
-                                
+
                                 <!-- Prévisualisation -->
                                 <div id="imagePreview" class="row g-3"></div>
-                                
+
                                 <div class="form-text mt-3">
                                     <i class="bi bi-info-circle me-1"></i>
                                     Ajoutez plusieurs photos sous différents angles. La première photo sera la photo principale.
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Boutons d'action -->
                         <div class="d-flex justify-content-between mt-5 pt-4 border-top">
-                            <a href="<?php echo BASE_URL; ?>/mes-objets" 
-                               class="btn btn-outline-secondary px-4">
+                            <a href="<?php echo BASE_URL; ?>/mes-objets"
+                                class="btn btn-outline-secondary px-4">
                                 <i class="bi bi-arrow-left me-2"></i>Annuler
                             </a>
                             <button type="submit" class="btn btn-primary px-5">
@@ -190,7 +190,7 @@ ob_start();
                         </div>
                     </form>
                 </div>
-                
+
                 <!-- Conseils -->
                 <div class="card-footer bg-light border-0 py-4">
                     <div class="row">
@@ -235,70 +235,71 @@ ob_start();
 </div>
 
 <style>
-.drop-zone {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-color: #c3cfe2;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+    .drop-zone {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-color: #c3cfe2;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
 
-.drop-zone:hover, .drop-zone.dragover {
-    background: linear-gradient(135deg, #e9ecef, #dee2e6);
-    border-color: #4361ee;
-    transform: translateY(-2px);
-}
+    .drop-zone:hover,
+    .drop-zone.dragover {
+        background: linear-gradient(135deg, #e9ecef, #dee2e6);
+        border-color: #4361ee;
+        transform: translateY(-2px);
+    }
 
-.step-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    z-index: 1;
-    transition: all 0.3s ease;
-}
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
 
-.progress-line {
-    height: 3px;
-    background-color: #e9ecef;
-    z-index: 0;
-    top: 25px;
-}
+    .progress-line {
+        height: 3px;
+        background-color: #e9ecef;
+        z-index: 0;
+        top: 25px;
+    }
 
-.progress-bar {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    height: 100%;
-    transition: width 0.3s ease;
-}
+    .progress-bar {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        height: 100%;
+        transition: width 0.3s ease;
+    }
 
-.step.active .step-circle {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 5px rgba(67, 97, 238, 0.2);
-}
+    .step.active .step-circle {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 5px rgba(67, 97, 238, 0.2);
+    }
 
-.image-preview {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
-}
+    .image-preview {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
-.preview-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--primary-color);
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-}
+    .preview-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 10px;
+    }
 
-.char-counter {
-    font-size: 0.85rem;
-}
+    .char-counter {
+        font-size: 0.85rem;
+    }
 </style>
 
 <?php

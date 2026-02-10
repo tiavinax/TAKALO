@@ -7,6 +7,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 // Configuration et routes
 require_once __DIR__ . '/../app/config/config.php';
-require_once __DIR__ . '/../app/routes/web.php';
+require_once __DIR__ . '/../app/config/web.php';
 
 Flight::start();

@@ -62,7 +62,7 @@ function traduireStatut($statut) {
                                 <div class="card-body">
                                     <h6><?php echo htmlspecialchars($echange['objet_propose_titre']); ?></h6>
                                     <?php if ($echange['photo_propose']): ?>
-                                    <img src="<?php echo BASE_URL; ?>/public/assets/images/<?php echo $echange['photo_propose']; ?>" 
+                                    <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo $echange['photo_propose']; ?>" 
                                          class="img-fluid rounded mb-2" style="max-height: 150px;">
                                     <?php endif; ?>
                                     <p class="mb-0"><small>Proposé par : <?php echo htmlspecialchars($echange['propose_par_nom']); ?></small></p>
@@ -78,7 +78,7 @@ function traduireStatut($statut) {
                                 <div class="card-body">
                                     <h6><?php echo htmlspecialchars($echange['objet_demande_titre']); ?></h6>
                                     <?php if ($echange['photo_demande']): ?>
-                                    <img src="<?php echo BASE_URL; ?>/public/assets/images/<?php echo $echange['photo_demande']; ?>" 
+                                    <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo $echange['photo_demande']; ?>" 
                                          class="img-fluid rounded mb-2" style="max-height: 150px;">
                                     <?php endif; ?>
                                     <p class="mb-0"><small>Propriétaire : <?php echo htmlspecialchars($echange['proprietaire_objet_demande_nom']); ?></small></p>
