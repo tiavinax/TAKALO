@@ -1,0 +1,76 @@
+<?php
+ob_start();
+?>
+<style>
+    .edit-card {
+        background: rgba(18, 18, 25, 0.95);
+        border: 2px solid rgba(255,255,255,0.05);
+        border-radius: 40px;
+        padding: 3rem;
+        position: relative;
+        overflow: hidden;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .edit-card::before {
+        content: "✏️";
+        position: absolute;
+        bottom: -30px;
+        right: -30px;
+        font-size: 10rem;
+        opacity: 0.05;
+        transform: rotate(10deg);
+    }
+</style>
+
+<div class="container">
+    <div class="edit-card">
+        <div class="text-center mb-5">
+            <span class="display-2 mb-3 d-inline-block animate-float">✏️</span>
+            <h1 class="display-3 fw-bold mb-3 rainbow-text">
+                MODIFIER MON PROFIL
+            </h1>
+            <p class="fs-3 text-secondary">
+                Modifie tes informations personnelles
+            </p>
+        </div>
+        
+        <form method="POST" action="<?php echo BASE_URL; ?>/mon-profil/update">
+            <div class="mb-4">
+                <label class="form-label fs-4 mb-2">
+                    <span class="me-2">🧑</span> Nom complet
+                </label>
+                <input type="text" class="form-control form-control-lg p-4 fs-4 rounded-4" 
+                       name="nom" value="<?php echo htmlspecialchars($utilisateur['nom']); ?>" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label fs-4 mb-2">
+                    <span class="me-2">📧</span> Email
+                </label>
+                <input type="email" class="form-control form-control-lg p-4 fs-4 rounded-4" 
+                       name="email" value="<?php echo htmlspecialchars($utilisateur['email']); ?>" required>
+            </div>
+            
+            <div class="alert alert-info p-4 rounded-4 fs-5 mb-4">
+                <span class="me-2">🔒</span>
+                Pour changer ton mot de passe, déconnecte-toi et utilise "Mot de passe oublié".
+            </div>
+            
+            <div class="d-grid gap-3 mt-5">
+                <button type="submit" class="btn btn-primary btn-lg py-4 fs-2 rounded-pill">
+                    <span class="me-2">💾</span>
+                    ENREGISTRER
+                </button>
+                <a href="<?php echo BASE_URL; ?>/mon-profil" class="btn btn-outline-secondary btn-lg py-4 fs-3 rounded-pill">
+                    ANNULER
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+<?php
+$content = ob_get_clean();
+Flight::render("layout", ["title" => "✏️ Modifier mon profil - Takalo-takalo", "content" => $content]);
+?>

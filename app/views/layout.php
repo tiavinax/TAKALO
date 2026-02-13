@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="dark">
 
+=======
+<?php ob_clean(); ?><!DOCTYPE html>
+<html lang="fr" data-bs-theme="dark">
+>>>>>>> b-tiavina1
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +22,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<<<<<<< HEAD
     <!-- CSS personnalisé sombre -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/assets/css/dark-theme.css">
 
@@ -28,10 +34,22 @@
             /* Pour la navbar fixe */
         }
 
+=======
+    <!-- CSS personnalisé -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/assets/css/dark-theme.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding-top: 70px;
+            background: #0a0a0f;
+        }
+>>>>>>> b-tiavina1
         .navbar-brand {
             font-weight: 900;
             font-size: 1.8rem;
         }
+<<<<<<< HEAD
 
         .logo-glow {
             filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
@@ -42,6 +60,11 @@
             box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
         }
 
+=======
+        .logo-glow {
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+>>>>>>> b-tiavina1
         .text-gradient-animated {
             background: linear-gradient(90deg, #8a2be2, #00d4aa, #8a2be2);
             background-size: 200% auto;
@@ -50,6 +73,7 @@
             background-clip: text;
             animation: gradient 3s linear infinite;
         }
+<<<<<<< HEAD
 
         @keyframes gradient {
             0% {
@@ -110,6 +134,20 @@
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
+=======
+        @keyframes gradient {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        main {
+            min-height: calc(100vh - 200px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+>>>>>>> b-tiavina1
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="<?php echo BASE_URL; ?>">
                 <i class="bi bi-arrow-left-right me-2 logo-glow"></i>
@@ -122,29 +160,53 @@
                 <?php if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])): ?>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-objets') !== false ? 'active' : ''; ?>"
+=======
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-objets') !== false ? 'active' : ''; ?>"
+>>>>>>> b-tiavina1
                                 href="<?php echo BASE_URL; ?>/mes-objets">
                                 <i class="bi bi-box me-1"></i> Mes objets
                             </a>
                         </li>
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/catalogue') !== false ? 'active' : ''; ?>"
+=======
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/catalogue') !== false ? 'active' : ''; ?>"
+>>>>>>> b-tiavina1
                                 href="<?php echo BASE_URL; ?>/catalogue">
                                 <i class="bi bi-search me-1"></i> Catalogue
                             </a>
                         </li>
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-echanges') !== false ? 'active' : ''; ?>"
+=======
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-echanges') !== false ? 'active' : ''; ?>"
+>>>>>>> b-tiavina1
                                 href="<?php echo BASE_URL; ?>/mes-echanges">
                                 <i class="bi bi-arrow-left-right me-1"></i> Mes échanges
                             </a>
                         </li>
+<<<<<<< HEAD
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center ripple" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+=======
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/historique-global') !== false ? 'active' : ''; ?>"
+                                href="<?php echo BASE_URL; ?>/historique-global">
+                                <i class="bi bi-clock-history me-1"></i> Historique
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+>>>>>>> b-tiavina1
                                 <i class="bi bi-person-circle me-2"></i>
                                 <span><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur'); ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
+<<<<<<< HEAD
                                 <li><a class="dropdown-item" href="#">
                                         <i class="bi bi-person me-2"></i> Mon profil
                                     </a></li>
@@ -154,19 +216,42 @@
                                 <li><a class="dropdown-item text-danger" href="<?php echo BASE_URL; ?>/logout">
                                         <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
                                     </a></li>
+=======
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo BASE_URL; ?>/mon-profil">
+                                        <i class="bi bi-person me-2"></i> Mon profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="<?php echo BASE_URL; ?>/logout">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+                                    </a>
+                                </li>
+>>>>>>> b-tiavina1
                             </ul>
                         </li>
                     </ul>
                 <?php else: ?>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a class="nav-link btn btn-outline-primary me-2 ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/login') !== false ? 'active' : ''; ?>"
+=======
+                            <a class="nav-link btn btn-outline-primary me-2 <?php echo strpos($_SERVER['REQUEST_URI'], '/login') !== false ? 'active' : ''; ?>"
+>>>>>>> b-tiavina1
                                 href="<?php echo BASE_URL; ?>/login">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Connexion
                             </a>
                         </li>
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a class="nav-link btn btn-primary ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/register') !== false ? 'active' : ''; ?>"
+=======
+                            <a class="nav-link btn btn-primary <?php echo strpos($_SERVER['REQUEST_URI'], '/register') !== false ? 'active' : ''; ?>"
+>>>>>>> b-tiavina1
                                 href="<?php echo BASE_URL; ?>/register">
                                 <i class="bi bi-person-plus me-1"></i> Inscription
                             </a>
@@ -207,7 +292,11 @@
                             <strong class="d-block text-gradient">Équipe de développement</strong>
                             <small class="text-muted">
                                 TIAVINA Anjaranomena - ETU003955<br>
+<<<<<<< HEAD
                                 RAKOTONDRINA Liantsoa - ETU004318<br>
+=======
+                                RAKOTONDRINA Liantsoa - ETU004318
+>>>>>>> b-tiavina1
                             </small>
                         </div>
                         <div>
@@ -224,6 +313,7 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<<<<<<< HEAD
 
     <!-- JavaScript personnalisé -->
     <script src="<?php echo BASE_URL; ?>/public/assets/js/main.js"></script>
@@ -319,3 +409,11 @@
 </body>
 
 </html>
+=======
+    
+    <?php if (isset($scripts)): ?>
+        <?php echo $scripts; ?>
+    <?php endif; ?>
+</body>
+</html>
+>>>>>>> b-tiavina1

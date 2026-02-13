@@ -73,44 +73,40 @@ INSERT INTO photos_objet (objet_id, chemin, est_principale) VALUES
 (5, 'canon_eos.jpg', 1),
 (6, 'guitare_yamaha.jpg', 1);
 
-            -- CHANGEMENT TIAVINA (9 FEV 2026 - 16:46)
-    -- Table des catégories (pour le backoffice)
 CREATE TABLE categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(100) NOT NULL,
-    description TEXT,
+    nom VARCHAR(50) UNIQUE NOT NULL,
+    icone VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Ajouter categorie_id à la table objets
-ALTER TABLE objets ADD COLUMN categorie_id INT DEFAULT NULL;
+INSERT INTO categories (nom, icone) VALUES
+('Tous', '🔍'),
+('Livres', '📚'),
+('Jeux video', '🎮'),
+('Instruments', '🎸'),
+('Smartphones', '📱'),
+('Ordinateurs', '💻'),
+('Audio', '🎧'),
+('Vetements', '👕'),
+('Chaussures', '👟'),
+('Accessoires', '🕶️'),
+('Photo', '📷'),
+('Jouets', '🧸');
+
+ALTER TABLE objets ADD COLUMN categorie_id INT;
 ALTER TABLE objets ADD FOREIGN KEY (categorie_id) REFERENCES categories(id);
 
--- Table historique des échanges (pour tracer la propriété)
-CREATE TABLE historique_echanges (
+
+CREATE TABLE historique_proprietaires (
     id INT PRIMARY KEY AUTO_INCREMENT,
     objet_id INT NOT NULL,
     ancien_proprietaire_id INT NOT NULL,
     nouveau_proprietaire_id INT NOT NULL,
     echange_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_echange TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (objet_id) REFERENCES objets(id),
     FOREIGN KEY (ancien_proprietaire_id) REFERENCES utilisateurs(id),
     FOREIGN KEY (nouveau_proprietaire_id) REFERENCES utilisateurs(id),
     FOREIGN KEY (echange_id) REFERENCES echanges(id)
 );
-
-CREATE TABLE administrateurs (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Admin par défaut
-INSERT INTO administrateurs (username, password, email) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@takalo.com');
-
-
-
