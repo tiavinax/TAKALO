@@ -1,35 +1,25 @@
 <?php
 class ObjetController {
     private $objetModel;
+    private $categorieModel;
     
     public function __construct() {
-        require_once __DIR__ . '/../models/ObjetModel.php';
         $this->objetModel = new ObjetModel();
+        $this->categorieModel = new CategorieModel();
     }
     
-   public function showMesObjets() {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
+    public function showMesObjets() {
+        if (!isset($_SESSION['user_id'])) {
+            Flight::redirect('/login');
+            return;
+        }
+        
+        $objets = $this->objetModel->getByUtilisateur($_SESSION['user_id']);
+        Flight::render('objets/mes-objets', [
+            'title' => '📦 Mes objets - Takalo-takalo',
+            'objets' => $objets
+        ]);
     }
-    
-    // DEBUG TEMPORAIRE
-    echo "<!-- DEBUG: user_id = " . $_SESSION['user_id'] . " -->";
-    echo "<!-- DEBUG: user_name = " . ($_SESSION['user_name'] ?? 'non défini') . " -->";
-    
-    $objets = $this->objetModel->getByUtilisateur($_SESSION['user_id']);
-    
-    // DEBUG TEMPORAIRE
-    echo "<!-- DEBUG: Nombre d'objets trouvés = " . count($objets) . " -->";
-    if (!empty($objets)) {
-        echo "<!-- DEBUG: Premier objet = " . htmlspecialchars(print_r($objets[0], true)) . " -->";
-    }
-    
-    Flight::render('objets/mes-objets', [
-        'title' => 'Mes objets',
-        'objets' => $objets
-    ]);
-}
     
     public function showAjouterObjet() {
         if (!isset($_SESSION['user_id'])) {
@@ -37,7 +27,11 @@ class ObjetController {
             return;
         }
         
-        Flight::render('objets/ajouter', ['title' => 'Ajouter un objet']);
+        $categories = $this->categorieModel->getForSelect();
+        Flight::render('objets/ajouter', [
+            'title' => '✨ Ajouter un objet - Takalo-takalo',
+            'categories' => $categories
+        ]);
     }
     
     public function ajouterObjet() {
@@ -47,11 +41,14 @@ class ObjetController {
         }
         
         $data = Flight::request()->data;
+        $categorie_id = $data->categorie_id ?? 1;
+        
         $objet_id = $this->objetModel->creer(
             $_SESSION['user_id'],
             $data->titre,
             $data->description,
-            $data->prix_estimatif
+            $data->prix_estimatif,
+            $categorie_id
         );
         
         // Gestion des photos
@@ -63,23 +60,23 @@ class ObjetController {
     }
     
     private function uploadPhotos($objet_id, $files) {
-        $uploadDir = __DIR__ . '/../../public/assets/images/objets/';
+        $uploadDir = __DIR__ . '/../../public/assets/images/';
         
-        // Créer le dossier si n'existe pas
-        if (!is_dir($uploadDir)) {
+        if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
         
         for ($i = 0; $i < count($files['name']); $i++) {
             if ($files['error'][$i] === UPLOAD_ERR_OK) {
-                $fileName = uniqid() . '_' . basename($files['name'][$i]);
+                $extension = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+                $fileName = 'objet_' . $objet_id . '_' . time() . '_' . $i . '.' . $extension;
                 $filePath = $uploadDir . $fileName;
                 
                 if (move_uploaded_file($files['tmp_name'][$i], $filePath)) {
                     $this->objetModel->ajouterPhoto(
                         $objet_id, 
                         $fileName, 
-                        $i === 0 // Première photo est principale
+                        $i === 0
                     );
                 }
             }
@@ -94,18 +91,19 @@ class ObjetController {
         
         $objet = $this->objetModel->getById($id);
         
-        // Vérifier que l'utilisateur est propriétaire
         if ($objet['utilisateur_id'] != $_SESSION['user_id']) {
             Flight::redirect('/mes-objets');
             return;
         }
         
         $photos = $this->objetModel->getPhotos($id);
+        $categories = $this->categorieModel->getForSelect();
         
         Flight::render('objets/modifier', [
-            'title' => 'Modifier l\'objet',
+            'title' => '✏️ Modifier - Takalo-takalo',
             'objet' => $objet,
-            'photos' => $photos
+            'photos' => $photos,
+            'categories' => $categories
         ]);
     }
     
@@ -120,7 +118,8 @@ class ObjetController {
             $id,
             $data->titre,
             $data->description,
-            $data->prix_estimatif
+            $data->prix_estimatif,
+            $data->categorie_id ?? null
         );
         
         Flight::json(['success' => $success]);
@@ -130,6 +129,15 @@ class ObjetController {
         if (!isset($_SESSION['user_id'])) {
             Flight::json(['error' => 'Non autorisé'], 401);
             return;
+        }
+        
+        $photos = $this->objetModel->getPhotos($id);
+        
+        foreach ($photos as $photo) {
+            $filePath = __DIR__ . '/../../public/assets/images/' . $photo['chemin'];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
         
         $success = $this->objetModel->delete($id);

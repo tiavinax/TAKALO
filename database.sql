@@ -72,3 +72,41 @@ INSERT INTO photos_objet (objet_id, chemin, est_principale) VALUES
 (4, 'casque_sony.jpg', 1),
 (5, 'canon_eos.jpg', 1),
 (6, 'guitare_yamaha.jpg', 1);
+
+CREATE TABLE categories (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(50) UNIQUE NOT NULL,
+    icone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO categories (nom, icone) VALUES
+('Tous', '🔍'),
+('Livres', '📚'),
+('Jeux video', '🎮'),
+('Instruments', '🎸'),
+('Smartphones', '📱'),
+('Ordinateurs', '💻'),
+('Audio', '🎧'),
+('Vetements', '👕'),
+('Chaussures', '👟'),
+('Accessoires', '🕶️'),
+('Photo', '📷'),
+('Jouets', '🧸');
+
+ALTER TABLE objets ADD COLUMN categorie_id INT;
+ALTER TABLE objets ADD FOREIGN KEY (categorie_id) REFERENCES categories(id);
+
+
+CREATE TABLE historique_proprietaires (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    objet_id INT NOT NULL,
+    ancien_proprietaire_id INT NOT NULL,
+    nouveau_proprietaire_id INT NOT NULL,
+    echange_id INT NOT NULL,
+    date_echange TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (objet_id) REFERENCES objets(id),
+    FOREIGN KEY (ancien_proprietaire_id) REFERENCES utilisateurs(id),
+    FOREIGN KEY (nouveau_proprietaire_id) REFERENCES utilisateurs(id),
+    FOREIGN KEY (echange_id) REFERENCES echanges(id)
+);

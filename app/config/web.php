@@ -1,197 +1,108 @@
 <?php
-// Charger les modèles et contrôleurs
-require_once __DIR__ . '/../models/UtilisateurModel.php';
-require_once __DIR__ . '/../models/ObjetModel.php';
-require_once __DIR__ . '/../models/EchangeModel.php';
+// ================================================
+// CHARGEMENT DES CONTRÔLEURS
+// ================================================
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/ObjetController.php';
 require_once __DIR__ . '/../controllers/CatalogueController.php';
 require_once __DIR__ . '/../controllers/EchangeController.php';
+require_once __DIR__ . '/../controllers/HistoriqueController.php';
 
-// Instanciation des contrôleurs
+// ================================================
+// CHARGEMENT DES MODÈLES
+// ================================================
+require_once __DIR__ . '/../models/UtilisateurModel.php';
+require_once __DIR__ . '/../models/ObjetModel.php';
+require_once __DIR__ . '/../models/EchangeModel.php';
+require_once __DIR__ . '/../models/CategorieModel.php';
+
+// ================================================
+// INSTANCIATION DES CONTRÔLEURS
+// ================================================
 $authController = new AuthController();
 $objetController = new ObjetController();
 $catalogueController = new CatalogueController();
 $echangeController = new EchangeController();
+$historiqueController = new HistoriqueController();
 
-// Routes publiques
+// ================================================
+// ROUTES
+// ================================================
+
+// Route d'accueil
 Flight::route('GET /', function() {
-    if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
-        Flight::redirect('/mes-objets');
-    } else {
-        // Afficher la page d'accueil publique
-        Flight::render('home', ['title' => 'Accueil - Takalo-takalo']);
-    }
+    Flight::render('welcome', ['title' => 'Bienvenue sur Takalo-takalo']);
 });
 
-// Route /mes-objets DOIT vérifier la session
-Flight::route('GET /mes-objets', function() use ($objetController) {
-    // Vérification STRICTE de la session
-    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        exit;
-    }
-    $objetController->showMesObjets();
-});
-
+// Routes d'authentification
 Flight::route('GET /login', [$authController, 'showLogin']);
 Flight::route('POST /login', [$authController, 'login']);
 Flight::route('GET /register', [$authController, 'showRegister']);
 Flight::route('POST /register', [$authController, 'register']);
-
-// Routes protégées
 Flight::route('GET /logout', [$authController, 'logout']);
 
-// Middleware pour vérifier l'authentification
-Flight::map('requireAuth', function() {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        Flight::redirect('/login');
-        return false;
-    }
-    return true;
-});
-
-// Routes objets (nécessitent une authentification)
-Flight::route('GET /mes-objets', function() use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $objetController->showMesObjets();
-});
-
-Flight::route('GET /ajouter-objet', function() use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $objetController->showAjouterObjet();
-});
-
-Flight::route('POST /ajouter-objet', function() use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $objetController->ajouterObjet();
-});
-
-Flight::route('GET /modifier-objet/@id', function($id) use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $objetController->showModifierObjet($id);
-});
-
-Flight::route('POST /modifier-objet/@id', function($id) use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $objetController->updateObjet($id);
-});
-
-Flight::route('POST /supprimer-objet/@id', function($id) use ($objetController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $objetController->deleteObjet($id);
-});
+// Routes objets
+Flight::route('GET /mes-objets', [$objetController, 'showMesObjets']);
+Flight::route('GET /ajouter-objet', [$objetController, 'showAjouterObjet']);
+Flight::route('POST /ajouter-objet', [$objetController, 'ajouterObjet']);
+Flight::route('GET /modifier-objet/@id', [$objetController, 'showModifierObjet']);
+Flight::route('POST /modifier-objet/@id', [$objetController, 'updateObjet']);
+Flight::route('POST /supprimer-objet/@id', [$objetController, 'deleteObjet']);
 
 // Routes catalogue
-Flight::route('GET /catalogue', function() use ($catalogueController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $catalogueController->showCatalogue();
-});
-
-Flight::route('GET /objet/@id', function($id) use ($catalogueController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $catalogueController->showDetailObjet($id);
-});
-
-Flight::route('POST /proposer-echange', function() use ($catalogueController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $catalogueController->proposerEchange();
-});
+Flight::route('GET /catalogue', [$catalogueController, 'showCatalogue']);
+Flight::route('GET /objet/@id', [$catalogueController, 'showDetailObjet']);
+Flight::route('POST /proposer-echange', [$catalogueController, 'proposerEchange']);
+Flight::route('GET /api/recherche', [$catalogueController, 'rechercherAjax']);
 
 // Routes échanges
-Flight::route('GET /mes-echanges', function() use ($echangeController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::redirect('/login');
-        return;
-    }
-    $echangeController->showMesEchanges();
-});
+Flight::route('GET /mes-echanges', [$echangeController, 'showMesEchanges']);
+Flight::route('POST /accepter-echange/@id', [$echangeController, 'accepterEchange']);
+Flight::route('POST /refuser-echange/@id', [$echangeController, 'refuserEchange']);
+Flight::route('POST /annuler-echange/@id', [$echangeController, 'annulerEchange']);
 
-Flight::route('POST /accepter-echange/@id', function($id) use ($echangeController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $echangeController->accepterEchange($id);
-});
+// Routes historiques (publiques)
+Flight::route('GET /historique/@id', [$historiqueController, 'showHistorique']);
 
-Flight::route('POST /refuser-echange/@id', function($id) use ($echangeController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $echangeController->refuserEchange($id);
-});
+Flight::start();
 
-Flight::route('POST /annuler-echange/@id', function($id) use ($echangeController) {
-    if (!isset($_SESSION['user_id'])) {
-        Flight::json(['error' => 'Non authentifié'], 401);
-        return;
-    }
-    $echangeController->annulerEchange($id);
-});
+// ================================================
+// ROUTES HISTORIQUE GLOBAL
+// ================================================
+require_once __DIR__ . '/../controllers/HistoriqueGlobalController.php';
+$historiqueGlobalController = new HistoriqueGlobalController();
+Flight::route('GET /historique-global', [$historiqueGlobalController, 'showHistoriqueGlobal']);
 
-// Route pour les erreurs 404
-Flight::map('notFound', function() {
-    Flight::render('layout', [
-        'title' => 'Page non trouvée',
-        'content' => '
-            <div class="container text-center py-5">
-                <h1 class="display-1 text-muted">404</h1>
-                <h2 class="mb-4">Page non trouvée</h2>
-                <p class="lead">La page que vous recherchez n\'existe pas ou a été déplacée.</p>
-                <a href="' . BASE_URL . '" class="btn btn-primary mt-3">Retour à l\'accueil</a>
-            </div>
-        '
-    ]);
-});
-Flight::route('GET /force-logout', function() {
-    session_destroy();
-    session_start();
-    session_regenerate_id(true);
-    Flight::redirect('/');
-});
-// Route pour tester la connexion (debug)
-Flight::route('GET /debug/session', function() {
-    echo '<pre>';
-    print_r($_SESSION);
-    echo '</pre>';
-});
+// ================================================
+// HISTORIQUE GLOBAL
+// ================================================
+require_once __DIR__ . '/../controllers/HistoriqueGlobalController.php';
 
-Flight::route('GET /debug/env', function() {
-    echo '<pre>';
-    echo 'BASE_URL: ' . BASE_URL . "\n";
-    echo 'Session ID: ' . session_id() . "\n";
-    echo '</pre>';
-});
-if (defined('DEBUG') && DEBUG) {
-    require_once __DIR__ . '/debug.php';
+// Vérifier que la classe existe
+if (class_exists('HistoriqueGlobalController')) {
+    $historiqueGlobalController = new HistoriqueGlobalController();
+    Flight::route('GET /historique-global', [$historiqueGlobalController, 'showHistoriqueGlobal']);
+    error_log("✅ Route /historique-global enregistrée");
+} else {
+    error_log("❌ Classe HistoriqueGlobalController non trouvée");
 }
+
+// ================================================
+// ROUTES PROFIL
+// ================================================
+require_once __DIR__ . '/../controllers/ProfilController.php';
+$profilController = new ProfilController();
+
+Flight::route('GET /mon-profil', [$profilController, 'showProfil']);
+Flight::route('GET /mon-profil/edit', [$profilController, 'showEditProfil']);
+Flight::route('POST /mon-profil/update', [$profilController, 'updateProfil']);
+
+// ================================================
+// ROUTES PROFIL (FORCER L'ORDRE)
+// ================================================
+require_once __DIR__ . '/../controllers/ProfilController.php';
+$profilController = new ProfilController();
+
+Flight::route('GET /mon-profil', [$profilController, 'showProfil']);
+Flight::route('GET /mon-profil/edit', [$profilController, 'showEditProfil']);
+Flight::route('POST /mon-profil/update', [$profilController, 'updateProfil']);

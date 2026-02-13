@@ -1,6 +1,5 @@
-<!DOCTYPE html>
+<?php ob_clean(); ?><!DOCTYPE html>
 <html lang="fr" data-bs-theme="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,31 +16,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- CSS personnalisé sombre -->
+    <!-- CSS personnalisé -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/assets/css/dark-theme.css">
 
     <style>
-        /* Overrides supplémentaires */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             padding-top: 70px;
-            /* Pour la navbar fixe */
+            background: #0a0a0f;
         }
-
         .navbar-brand {
             font-weight: 900;
             font-size: 1.8rem;
         }
-
         .logo-glow {
             filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
         }
-
-        /* Effets spéciaux */
-        .card-glow {
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
-        }
-
         .text-gradient-animated {
             background: linear-gradient(90deg, #8a2be2, #00d4aa, #8a2be2);
             background-size: 200% auto;
@@ -50,66 +40,18 @@
             background-clip: text;
             animation: gradient 3s linear infinite;
         }
-
         @keyframes gradient {
-            0% {
-                background-position: 0% center;
-            }
-
-            100% {
-                background-position: 200% center;
-            }
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
-
-        /* Espacement amélioré */
         main {
             min-height: calc(100vh - 200px);
         }
-
-        /* Ripple effect */
-        .ripple {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ripple::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.6);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        .ripple:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
     </style>
 </head>
-
 <body>
-    <!-- Pattern background -->
-    <div class="bg-pattern"></div>
-
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="<?php echo BASE_URL; ?>">
                 <i class="bi bi-arrow-left-right me-2 logo-glow"></i>
@@ -122,51 +64,61 @@
                 <?php if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])): ?>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-objets') !== false ? 'active' : ''; ?>"
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-objets') !== false ? 'active' : ''; ?>"
                                 href="<?php echo BASE_URL; ?>/mes-objets">
                                 <i class="bi bi-box me-1"></i> Mes objets
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/catalogue') !== false ? 'active' : ''; ?>"
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/catalogue') !== false ? 'active' : ''; ?>"
                                 href="<?php echo BASE_URL; ?>/catalogue">
                                 <i class="bi bi-search me-1"></i> Catalogue
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-echanges') !== false ? 'active' : ''; ?>"
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/mes-echanges') !== false ? 'active' : ''; ?>"
                                 href="<?php echo BASE_URL; ?>/mes-echanges">
                                 <i class="bi bi-arrow-left-right me-1"></i> Mes échanges
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/historique-global') !== false ? 'active' : ''; ?>"
+                                href="<?php echo BASE_URL; ?>/historique-global">
+                                <i class="bi bi-clock-history me-1"></i> Historique
+                            </a>
+                        </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center ripple" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle me-2"></i>
                                 <span><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur'); ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo BASE_URL; ?>/mon-profil">
                                         <i class="bi bi-person me-2"></i> Mon profil
-                                    </a></li>
+                                    </a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item text-danger" href="<?php echo BASE_URL; ?>/logout">
+                                <li>
+                                    <a class="dropdown-item text-danger" href="<?php echo BASE_URL; ?>/logout">
                                         <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
-                                    </a></li>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 <?php else: ?>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-primary me-2 ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/login') !== false ? 'active' : ''; ?>"
+                            <a class="nav-link btn btn-outline-primary me-2 <?php echo strpos($_SERVER['REQUEST_URI'], '/login') !== false ? 'active' : ''; ?>"
                                 href="<?php echo BASE_URL; ?>/login">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Connexion
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary ripple <?php echo strpos($_SERVER['REQUEST_URI'], '/register') !== false ? 'active' : ''; ?>"
+                            <a class="nav-link btn btn-primary <?php echo strpos($_SERVER['REQUEST_URI'], '/register') !== false ? 'active' : ''; ?>"
                                 href="<?php echo BASE_URL; ?>/register">
                                 <i class="bi bi-person-plus me-1"></i> Inscription
                             </a>
@@ -207,7 +159,7 @@
                             <strong class="d-block text-gradient">Équipe de développement</strong>
                             <small class="text-muted">
                                 TIAVINA Anjaranomena - ETU003955<br>
-                                RAKOTONDRINA Liantsoa - ETU004318<br>
+                                RAKOTONDRINA Liantsoa - ETU004318
                             </small>
                         </div>
                         <div>
@@ -224,98 +176,9 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- JavaScript personnalisé -->
-    <script src="<?php echo BASE_URL; ?>/public/assets/js/main.js"></script>
-
+    
     <?php if (isset($scripts)): ?>
         <?php echo $scripts; ?>
     <?php endif; ?>
-
-    <script>
-        // Scripts d'amélioration UX
-        document.addEventListener('DOMContentLoaded', function() {
-            // Effet ripple sur les boutons
-            const buttons = document.querySelectorAll('.ripple');
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    const x = e.clientX - e.target.getBoundingClientRect().left;
-                    const y = e.clientY - e.target.getBoundingClientRect().top;
-
-                    const ripple = document.createElement('span');
-                    ripple.style.left = x + 'px';
-                    ripple.style.top = y + 'px';
-                    ripple.classList.add('ripple-effect');
-
-                    this.appendChild(ripple);
-                    setTimeout(() => ripple.remove(), 1000);
-                });
-            });
-
-            // Animations au scroll
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-slide-in');
-                    }
-                });
-            }, observerOptions);
-
-            // Observer les cartes et sections
-            document.querySelectorAll('.card, section').forEach(el => observer.observe(el));
-
-            // Notification toast
-            window.showToast = function(message, type = 'info') {
-                const toast = document.createElement('div');
-                toast.className = `toast align-items-center text-bg-${type} border-0`;
-                toast.setAttribute('role', 'alert');
-                toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">${message}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            `;
-
-                document.body.appendChild(toast);
-                const bsToast = new bootstrap.Toast(toast);
-                bsToast.show();
-
-                toast.addEventListener('hidden.bs.toast', () => toast.remove());
-            };
-
-            // Auto-hide alerts
-            setTimeout(() => {
-                document.querySelectorAll('.alert:not(.alert-permanent)').forEach(alert => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    setTimeout(() => bsAlert.close(), 5000);
-                });
-            }, 3000);
-        });
-    </script>
-
-    <style>
-        /* Ripple effect style */
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-    </style>
 </body>
-
 </html>
